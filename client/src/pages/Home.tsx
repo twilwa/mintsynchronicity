@@ -68,7 +68,7 @@ export default function Home() {
               EAS Offchain Attestations
             </div>
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
-              Mint cryptographic proof of <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 neon-text">shared discovery.</span>
+              Mint proof of <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 neon-text">shared discovery.</span>
             </h1>
             <p className="text-lg text-muted-foreground max-w-xl">
               Turn "I was just about to send you that!" into verifiable, mintable on-chain artifacts using sealed envelopes and action commits.

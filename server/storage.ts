@@ -1,6 +1,11 @@
-import { type User, type InsertUser, type WaitlistEntry, type InsertWaitlistEntry, users, waitlistEntries } from "@shared/schema";
+import {
+  type User, type InsertUser,
+  type WaitlistEntry, type InsertWaitlistEntry,
+  type SyncEvent, type InsertSyncEvent,
+  users, waitlistEntries, synchronicityEvents,
+} from "@shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -8,6 +13,8 @@ export interface IStorage {
   createUser(user: InsertUser): Promise<User>;
   addToWaitlist(entry: InsertWaitlistEntry): Promise<WaitlistEntry>;
   getWaitlistCount(): Promise<number>;
+  createSyncEvent(event: InsertSyncEvent): Promise<SyncEvent>;
+  getRecentSyncEvents(limit?: number): Promise<SyncEvent[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -34,6 +41,15 @@ export class DatabaseStorage implements IStorage {
   async getWaitlistCount(): Promise<number> {
     const result = await db.select().from(waitlistEntries);
     return result.length;
+  }
+
+  async createSyncEvent(event: InsertSyncEvent): Promise<SyncEvent> {
+    const [result] = await db.insert(synchronicityEvents).values(event).returning();
+    return result;
+  }
+
+  async getRecentSyncEvents(limit = 10): Promise<SyncEvent[]> {
+    return db.select().from(synchronicityEvents).orderBy(desc(synchronicityEvents.resolvedAt)).limit(limit);
   }
 }
 

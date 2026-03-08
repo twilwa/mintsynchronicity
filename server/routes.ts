@@ -33,5 +33,10 @@ export async function registerRoutes(
     return res.json({ count });
   });
 
+  app.get("/api/sync-events", async (_req, res) => {
+    const events = await storage.getRecentSyncEvents(20);
+    return res.json({ events });
+  });
+
   return httpServer;
 }
